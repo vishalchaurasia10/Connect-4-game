@@ -85,7 +85,7 @@ const Game = () => {
             ) : (
                 <p className="text-lg font-medium mb-4">{`${player}'s turn`}</p>
             )}
-            <div className="gameWrapper w-[35rem] relative">
+            <div className="gameWrapper md:w-[35rem] relative">
                 {winner && <svg className='absolute' width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
                     {winningCombination.length === 4 && (
                         <line
@@ -108,7 +108,7 @@ const Game = () => {
                                 transition={{ duration: 0.1 }}
                                 key={colIndex}
                                 style={{ backgroundColor: cell }}
-                                className={`w-10 h-10 md:w-16 md-h-16 bg-blue-400 cursor-pointer rounded-full ${cell}`}
+                                className={`w-10 h-10 md:w-16 md:h-16 bg-blue-400 cursor-pointer rounded-full ${cell}`}
                                 onClick={() => handleCellClick(rowIndex, colIndex)}
                             ></motion.div>
                         ))
