@@ -1,10 +1,9 @@
-import Image from 'next/image'
-import Game from './components/Game'
+import ConnectFour from "./components/ConnectFourBoard";
 
 export default function Home() {
   return (
     <>
-      <Game />
+      <ConnectFour />
     </>
   )
 }
