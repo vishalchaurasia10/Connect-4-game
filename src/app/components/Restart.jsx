@@ -12,10 +12,10 @@ const RestartComponent = ({ showModal, currentPlayer, setshowModal, restart }) =
                         <header className="modal-header py-3 flex items-center justify-between">
                             <div className="excalmation flex space-x-2 items-center">
                                 <h4 className="modal-title text-2xl font-bold flex items-center space-x-2">
-                                    {!currentPlayer === "X" ? (
-                                        <div className="bg-[#23a6d5] w-10 h-10 rounded-full"></div>
-                                    ) : (
+                                    {currentPlayer === "X" ? (
                                         <div className="bg-[#e73c7e] w-10 h-10 rounded-full"></div>
+                                    ) : (
+                                        <div className="bg-[#23a6d5] w-10 h-10 rounded-full"></div>
                                     )}
                                     <span>has won the game</span>
                                 </h4>
@@ -27,8 +27,8 @@ const RestartComponent = ({ showModal, currentPlayer, setshowModal, restart }) =
                         </div>
                         <div className="modal-footer py-5 border-t">
                             <div className="flex space-x-2">
-                                <button onClick={() => setshowModal(false)} title='Cancel' className="button p-2 hover:bg-white transition-all duration-300 border border-white rounded-lg" type="button">Cancel</button>
-                                <button onClick={() => restart()} title='Delete' className="button p-2 hover:bg-white transition-all duration-300 border border-white rounded-lg" type="button">Restart</button>
+                                <button onClick={() => setshowModal(false)} title='Cancel' className="button p-2 hover:bg-black transition-all duration-300 border border-white rounded-lg" type="button">Cancel</button>
+                                <button onClick={() => restart()} title='Restart' className="button p-2 hover:bg-black transition-all duration-300 border border-white rounded-lg" type="button">Restart</button>
                             </div>
                         </div>
                     </form>
