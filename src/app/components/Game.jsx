@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Jost } from 'next/font/google';
 
@@ -35,21 +35,32 @@ const Game = () => {
     };
 
     const calculateWinningCombination = (type, x, y) => {
-        const combination = [];
-        combination.push([x, y]);
+        const combination = [[x, y]];
 
-        for (let dx = -1; dx <= 1; dx++) {
-            for (let dy = -1; dy <= 1; dy++) {
-                if (dx !== 0 || dy !== 0) {
-                    let count = 1;
-                    let cx = x + dx;
-                    let cy = y + dy;
-                    while (count < 4 && cx >= 0 && cx < 7 && cy >= 0 && cy < 6 && board[cy][cx] === type) {
-                        combination.push([cx, cy]);
-                        cx += dx;
-                        cy += dy;
-                        count++;
-                    }
+        // Arrays to store deltas for different directions (horizontal, vertical, and diagonal)
+        const deltas = [
+            [[-1, 0], [1, 0]], // Horizontal
+            [[0, -1], [0, 1]], // Vertical
+            [[-1, -1], [1, 1], [-1, 1], [1, -1]], // Diagonal
+        ];
+
+        for (const delta of deltas) {
+            for (const [dx, dy] of delta) {
+                let count = 1;
+                let cx = x + dx;
+                let cy = y + dy;
+                const currentCombination = [[x, y]];
+
+                while (count < 4 && cx >= 0 && cx < 7 && cy >= 0 && cy < 6 && board[cy][cx] === type) {
+                    currentCombination.push([cx, cy]);
+                    cx += dx;
+                    cy += dy;
+                    count++;
+                }
+
+                // Combine with the main combination if it forms a winning sequence
+                if (currentCombination.length === 4) {
+                    combination.push(...currentCombination);
                 }
             }
         }
@@ -57,25 +68,36 @@ const Game = () => {
         return combination;
     };
 
-    const handleCellClick = (row, col) => {
-        if (board[row][col] === null && !winner) {
-            const newBoard = board.map((rowArray, rowIndex) => {
-                if (rowIndex === row) {
-                    return rowArray.map((cell, colIndex) =>
-                        colIndex === col ? (player === 'Player 1' ? 'yellow' : 'red') : cell
-                    );
-                }
-                return rowArray;
-            });
 
-            setBoard(newBoard);
-            if (check(player === 'Player 1' ? 'yellow' : 'red', col, row)) {
-                setWinner(player);
-                setWinningCombination(calculateWinningCombination(player === 'Player 1' ? 'yellow' : 'red', col, row));
+    const handleCellClick = (col) => {
+        if (!winner) {
+            // Find the lowest available row in the clicked column
+            let row = 5; // Assuming a 0-based index for rows
+
+            while (row >= 0 && board[row][col] !== null) {
+                row--;
             }
-            setPlayer(player === 'Player 1' ? 'Player 2' : 'Player 1');
+
+            if (row >= 0) {
+                const newBoard = board.map((rowArray, rowIndex) => {
+                    if (rowIndex === row) {
+                        return rowArray.map((cell, colIndex) =>
+                            colIndex === col ? (player === 'Player 1' ? 'yellow' : 'red') : cell
+                        );
+                    }
+                    return rowArray;
+                });
+
+                setBoard(newBoard);
+                if (check(player === 'Player 1' ? 'yellow' : 'red', col, row)) {
+                    setWinner(player);
+                    setWinningCombination(calculateWinningCombination(player === 'Player 1' ? 'yellow' : 'red', col, row));
+                }
+                setPlayer(player === 'Player 1' ? 'Player 2' : 'Player 1');
+            }
         }
     };
+
 
     return (
         <div className="text-center bg-black text-white min-h-screen flex flex-col items-center justify-center">
@@ -86,19 +108,6 @@ const Game = () => {
                 <p className="text-lg font-medium mb-4">{`${player}'s turn`}</p>
             )}
             <div className="gameWrapper md:w-[35rem] relative">
-                {winner && <svg className='absolute' width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                    {winningCombination.length === 4 && (
-                        <line
-                            x1={(winningCombination[0][0] + 0.5) * (100 / 7) + '%'}
-                            y1={(winningCombination[0][1] + 0.5) * (100 / 6) + '%'}
-                            x2={(winningCombination[3][0] + 0.5) * (100 / 7) + '%'}
-                            y2={(winningCombination[3][1] + 0.5) * (100 / 6) + '%'}
-                            stroke={winner === 'Player 2' ? 'yellow' : 'red'}
-                            strokeWidth="6"
-                            strokeLinecap="round"
-                        />
-                    )}
-                </svg>}
                 <div className="grid grid-cols-7 gap-2 mr-4">
                     {board.map((row, rowIndex) => (
                         row.map((cell, colIndex) => (
@@ -108,9 +117,13 @@ const Game = () => {
                                 transition={{ duration: 0.1 }}
                                 key={colIndex}
                                 style={{ backgroundColor: cell }}
-                                className={`w-10 h-10 md:w-16 md:h-16 bg-blue-400 cursor-pointer rounded-full ${cell}`}
-                                onClick={() => handleCellClick(rowIndex, colIndex)}
-                            ></motion.div>
+                                className={`w-10 h-10 md:w-16 md:h-16 bg-blue-400 flex items-center justify-center cursor-pointer rounded-full ${cell}`}
+                                onClick={() => handleCellClick(colIndex)}
+                            >
+                                {winner && winningCombination.some(([x, y]) => x === colIndex && y === rowIndex) && (
+                                    <span className="cross text-black text-3xl font-medium">X</span>
+                                )}
+                            </motion.div>
                         ))
                     ))}
                 </div>
