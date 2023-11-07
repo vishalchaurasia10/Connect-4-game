@@ -5,26 +5,73 @@ import { toast, Toaster } from "react-hot-toast";
 import { usePathname, useRouter } from "next/navigation";
 
 const AuthState = (props) => {
-
     const [user, setUser] = useState(null);
     const router = useRouter();
     const pathname = usePathname();
 
-    const register = async (credentials) => {
-        console.log('register', credentials);
-        setUser({
-            name: credentials.name,
-            email: credentials.email,
+    // WebSocket connection state
+    const [socket, setSocket] = useState(null);
+    const [index, setIndex] = useState(0);
+    const [allowPlayersToEnter, setAllowPlayersToEnter] = useState(false);
+
+    const establishWebSocketConnection = () => {
+        return new Promise((resolve) => {
+            const ws = new WebSocket("ws://localhost:3001"); // Replace with your WebSocket server address
+
+            ws.addEventListener("open", () => {
+                console.log("WebSocket connection established");
+                setSocket(ws); // Set the socket state once the connection is established
+                resolve(); // Resolve the promise to signal that the WebSocket is open
+            });
+
+            ws.addEventListener("message", (event) => {
+                const data = JSON.parse(event.data);
+                console.log("WebSocket message received", data);
+                if (data.reason === "/onAllowPlayersToEnter") {
+                    setAllowPlayersToEnter(true);
+                }
+                setIndex(data.index);
+            });
         });
-        toast.success('Registered successfully');
-        router.push('/');
-    }
+    };
+
+    const register = async (credentials) => {
+        console.log("register", credentials);
+
+        try {
+            await establishWebSocketConnection(); // Wait for the WebSocket connection
+
+            const response = await fetch("http://localhost:3001/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ ...credentials, index }),
+            });
+
+            console.log(await response.json());
+
+            if (response.status === 200) {
+                setUser({
+                    name: credentials.name,
+                    email: credentials.email,
+                });
+                toast.success("Registered successfully");
+                router.push("/");
+            } else {
+                toast.error("Registration failed");
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error(error.message);
+        }
+    };
 
     useEffect(() => {
         if (!user) {
-            router.push('/auth')
+            router.push("/auth");
         }
-    }, [pathname])
+    }, [pathname]);
 
     return (
         <>
@@ -33,13 +80,15 @@ const AuthState = (props) => {
                 value={{
                     user,
                     setUser,
-                    register
+                    register,
+                    socket, // Pass the WebSocket connection through the context
+                    allowPlayersToEnter,
                 }}
             >
                 {props.children}
             </AuthContext.Provider>
         </>
-    )
-}
+    );
+};
 
 export default AuthState;
