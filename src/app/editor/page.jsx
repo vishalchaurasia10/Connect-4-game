@@ -1,5 +1,4 @@
-'use client'
-import { Editor } from 'ace-builds'
+import Editor from '../components/Layout/Editor'
 import React from 'react'
 
 const page = () => {
