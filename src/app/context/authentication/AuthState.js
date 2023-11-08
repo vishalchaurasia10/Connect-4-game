@@ -16,6 +16,7 @@ const AuthState = (props) => {
     const [scoreboard, setScoreboard] = useState([]);
     const [testBoard, setTestBoard] = useState([]);
     const [testMatchResult, setTestMatchResult] = useState(null);
+    const [loading, setLoading] = useState(true);
     const indexRef = useRef(index);
 
     const establishWebSocketConnection = (credentials) => {
@@ -34,8 +35,9 @@ const AuthState = (props) => {
                 if (resData.reason === "/onAllowPlayersToEnter") {
                     setAllowPlayersToEnter(true);
                 }
-                if (resData.reason === "/onGameStart" || resData.reason === "/onGameEnd") {
+                if (resData.reason === "/onGameEnd") {
                     setScoreboard(resData.scoreboard);
+                    setLoading(false)
                 }
                 if (resData.reason === "/onClientConnected") {
                     const newIndex = resData.index;
@@ -73,6 +75,9 @@ const AuthState = (props) => {
                 if (resData.reason === "/onEndTestMatch") {
                     setTestMatchResult(resData)
                 }
+                if (resData.reason === "/onMakeMove") {
+                    setLoading(true)
+                }
             });
         });
     };
@@ -108,7 +113,8 @@ const AuthState = (props) => {
                     testBoard,
                     setTestBoard,
                     testMatchResult,
-                    setTestMatchResult
+                    setTestMatchResult,
+                    loading
                 }}
             >
                 {props.children}
