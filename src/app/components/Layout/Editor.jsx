@@ -5,10 +5,11 @@ import 'ace-builds/src-noconflict/mode-javascript';
 import 'ace-builds/src-noconflict/theme-monokai';
 import AuthContext from '@/app/context/authentication/authContext';
 import { toast, Toaster } from 'react-hot-toast';
+import ConnectFour from '../ConnectFourBoard';
 
 const Editor = () => {
   const [code, setCode] = useState(''); // State to store the code
-  const { allowPlayersToEnter, index } = useContext(AuthContext)
+  const { allowPlayersToEnter, index, testBoard } = useContext(AuthContext)
 
   // Function to handle code changes
   const handleCodeChange = (newCode) => {
@@ -17,15 +18,15 @@ const Editor = () => {
 
   const testCode = async () => {
     try {
-      console.log(JSON.stringify({ code, index }))
+      // console.log(JSON.stringify({ code, index }))
       const response = await fetch('http://localhost:3001/onPlayerFunctionTest', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ code, index })
+        body: `{"code":"(function makeMove(state){return 4})","index":0}`
       })
-      console.log("response",await response.json())
+      console.log("response", await response.text())
     } catch (error) {
       console.log(error)
       toast.error(error.message)
@@ -58,6 +59,7 @@ const Editor = () => {
           <h1 className='text-4xl text-center font-bold pb-4'>Please wait for the game to start</h1>
         }
       </div>
+      {testBoard && <ConnectFour testBoardState={testBoard} type='test' />}
     </>
 
   );

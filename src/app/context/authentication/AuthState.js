@@ -14,6 +14,8 @@ const AuthState = (props) => {
     const [index, setIndex] = useState(0);
     const [allowPlayersToEnter, setAllowPlayersToEnter] = useState(false);
     const [scoreboard, setScoreboard] = useState([]);
+    const [testBoard, setTestBoard] = useState([]);
+    const [testBoard2, setTestBoard2] = useState([]);
     const indexRef = useRef(index);
 
     const establishWebSocketConnection = (credentials) => {
@@ -65,9 +67,35 @@ const AuthState = (props) => {
                     }
                     resolve(newIndex);
                 }
+                if (resData.reason === "/onMakeTestMove") {
+                    setTestBoard2(resData.state);
+                }
             });
         });
     };
+
+    useEffect(() => {
+        console.log(testBoard2);
+        function replaceValuesInArray(originalArray) {
+            const mapping = {
+                1: 'X',
+                2: 'O',
+                0: '',
+            };
+
+            const newArray = originalArray.map((row) =>
+                row.map((value) => mapping[value] || value)
+            );
+
+            return newArray;
+        }
+
+        setTestBoard(replaceValuesInArray(testBoard2));
+    }, [testBoard2]);
+
+    useEffect(() => {
+        console.log(testBoard);
+    }, [testBoard]);
 
     const register = async (credentials) => {
         console.log("register", credentials);
@@ -98,6 +126,7 @@ const AuthState = (props) => {
                     allowPlayersToEnter,
                     scoreboard,
                     index,
+                    testBoard,
                 }}
             >
                 {props.children}

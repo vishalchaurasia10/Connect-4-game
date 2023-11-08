@@ -10,7 +10,7 @@ const jost = Jost({
     subsets: ['latin'],
 });
 
-export default function ConnectFour() {
+export default function ConnectFour({ testBoardState, type }) {
     const [board, setboard] = useState([
         ["", "", "", "", "", "", ""],
         ["", "", "", "", "", "", ""],
@@ -23,7 +23,7 @@ export default function ConnectFour() {
     const [isWinner, setisWinner] = useState(false);
     const [showModal, setshowModal] = useState(false);
 
-    const fullBoard = board.map((row, rowIdx) => {
+    const fullBoard = (type === 'test' ? testBoardState : board).map((row, rowIdx) => {
         return row.map((val, colIdx) => {
             return (
                 <ConnectFourSquare
@@ -32,7 +32,7 @@ export default function ConnectFour() {
                     colIdx={colIdx}
                     rowIdx={rowIdx}
                     currentPlayer={currentPlayer}
-                    board={board}
+                    board={(type === 'test' ? testBoardState : board)} // Pass testBoardState or board based on type
                     setCurrentPlayer={setCurrentPlayer}
                     setisWinner={setisWinner}
                     isWinner={isWinner}
@@ -40,6 +40,7 @@ export default function ConnectFour() {
             );
         });
     });
+
 
     const restart = () => {
         setboard([
@@ -50,7 +51,7 @@ export default function ConnectFour() {
             ["", "", "", "", "", "", ""],
             ["", "", "", "", "", "", ""],
         ]);
-        setCurrentPlayer("X");
+        setCurrentPlayer("1");
         setisWinner(false);
         setshowModal(false);
     }
@@ -76,7 +77,7 @@ export default function ConnectFour() {
             {isWinner ? (
                 <div className="current-player-container mt-7">
                     <h1 className={`text-4xl ${jost.className} font-bold`}>The Winner is</h1>
-                    {currentPlayer === "X" ? (
+                    {currentPlayer === "1" ? (
                         <div className="cf-token-O"></div>
                     ) : (
                         <div className="cf-token-X"></div>
