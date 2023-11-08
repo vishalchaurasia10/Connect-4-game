@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AuthContext from "./authContext";
 import { toast, Toaster } from "react-hot-toast";
 import { usePathname, useRouter } from "next/navigation";
@@ -14,9 +14,10 @@ const AuthState = (props) => {
     const [index, setIndex] = useState(0);
     const [allowPlayersToEnter, setAllowPlayersToEnter] = useState(false);
     const [scoreboard, setScoreboard] = useState([]);
+    const indexRef = useRef(index);
 
-    const establishWebSocketConnection = () => {
-        return new Promise((resolve) => {
+    const establishWebSocketConnection = (credentials) => {
+        return new Promise(async (resolve) => {
             const ws = new WebSocket("ws://localhost:3001"); // Replace with your WebSocket server address
 
             ws.addEventListener("open", () => {
@@ -25,16 +26,45 @@ const AuthState = (props) => {
                 resolve(); // Resolve the promise to signal that the WebSocket is open
             });
 
-            ws.addEventListener("message", (event) => {
-                const data = JSON.parse(event.data);
-                console.log("WebSocket message received", data);
-                if (data.reason === "/onAllowPlayersToEnter") {
+            ws.addEventListener("message", async (event) => {
+                const resData = JSON.parse(event.data);
+                console.log("WebSocket message received", resData);
+                if (resData.reason === "/onAllowPlayersToEnter") {
                     setAllowPlayersToEnter(true);
                 }
-                if (data.reason === "/onGameStart" || data.reason === "/onGameEnd") {
-                    setScoreboard(data.scoreboard);
+                if (resData.reason === "/onGameStart" || resData.reason === "/onGameEnd") {
+                    setScoreboard(resData.scoreboard);
                 }
-                setIndex(data.index);
+                if (resData.reason === "/onClientConnected") {
+                    const newIndex = resData.index;
+                    indexRef.current = newIndex; // Update the ref with the latest index
+                    setIndex(newIndex); // Update the state with the latest index
+                    const response = await fetch("http://localhost:3001/register", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ ...credentials, index: newIndex }),
+                    });
+
+                    const data = await response.json();
+                    console.log(data);
+
+                    if (response.status === 200) {
+                        setUser({
+                            name: credentials.name,
+                            email: credentials.email,
+                        });
+                        if (data.allowPlayersToEnter === true) {
+                            setAllowPlayersToEnter(true);
+                        }
+                        toast.success("Registered successfully");
+                        router.push("/");
+                    } else {
+                        toast.error("Registration failed");
+                    }
+                    resolve(newIndex);
+                }
             });
         });
     };
@@ -43,32 +73,7 @@ const AuthState = (props) => {
         console.log("register", credentials);
 
         try {
-            await establishWebSocketConnection(); // Wait for the WebSocket connection
-
-            const response = await fetch("http://localhost:3001/register", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ ...credentials, index }),
-            });
-
-            const data = await response.json();
-            console.log(data);
-
-            if (response.status === 200) {
-                setUser({
-                    name: credentials.name,
-                    email: credentials.email,
-                });
-                if (data.allowPlayersToEnter === true) {
-                    setAllowPlayersToEnter(true);
-                }
-                toast.success("Registered successfully");
-                router.push("/");
-            } else {
-                toast.error("Registration failed");
-            }
+            await establishWebSocketConnection(credentials); // Wait for the WebSocket connection and get the new index
         } catch (error) {
             console.error(error);
             toast.error(error.message);
