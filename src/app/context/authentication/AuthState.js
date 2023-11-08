@@ -41,7 +41,7 @@ const AuthState = (props) => {
                     const newIndex = resData.index;
                     indexRef.current = newIndex; // Update the ref with the latest index
                     setIndex(newIndex); // Update the state with the latest index
-                    const response = await fetch("http://localhost:3001/register", {
+                    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/register`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",

@@ -7,7 +7,7 @@ const Leaderboard = () => {
 
     useEffect(() => {
         const getLeaderboard = async () => {
-            const res = await fetch('http://localhost:3001/getLeaderboard')
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getLeaderboard`)
             const data = await res.json()
             console.log(data)
             setScoreboard(data.scoreboard)

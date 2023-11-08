@@ -39,7 +39,7 @@ const Navbar = () => {
                 className='fixed top-0 left-0 z-40 w-full py-4 flex justify-center items-center font-firaCode text-xl bg-black'>
                 <div className="left w-1/2 md:w-1/4 pl-4 md:pl-8 flex items-center">
                     <Link href='/'>
-                        <h1 className='font-extrabold text-2xl'>Battle Of Bots</h1>
+                        <h1 className='font-extrabold text-lg md:text-2xl whitespace-nowrap'>Battle Of Bots</h1>
                     </Link>
                 </div>
 

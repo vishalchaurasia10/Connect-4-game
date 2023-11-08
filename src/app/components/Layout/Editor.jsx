@@ -27,7 +27,7 @@ const Editor = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:3001/onPlayerFunctionTest', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/onPlayerFunctionTest`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -45,7 +45,7 @@ const Editor = () => {
     if (code.length === 0) return toast.error("Please write some code")
 
     try {
-      const response = await fetch('http://localhost:3001/onPlayerFunctionSubmit', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/onPlayerFunctionSubmit`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
