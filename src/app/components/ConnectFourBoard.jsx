@@ -62,7 +62,7 @@ export default function ConnectFour() {
     }, [isWinner])
 
     return (
-        <div className="main-Page-Container py-24">
+        <div className="main-Page-Container py-24 min-h-screen">
             <div className="current-player-container">
                 <h1 className={`text-4xl ${jost.className} font-bold mt-4`}>Current Player is</h1>
                 {currentPlayer === "X" ? (

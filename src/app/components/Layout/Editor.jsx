@@ -19,7 +19,7 @@ const Editor = () => {
   }
 
   return (
-    <div className='pt-24 px-2 lg:w-1/2 mx-auto min-h-screen rounded-2xl'>
+    <div className='pt-24 px-2 lg:w-1/2 mx-auto min-h-screen pb-10 rounded-2xl'>
       {allowPlayersToEnter ?
         <>
           <h1 className='text-4xl text-center font-bold pb-4'>Start Writing the code here</h1>

@@ -13,6 +13,7 @@ const AuthState = (props) => {
     const [socket, setSocket] = useState(null);
     const [index, setIndex] = useState(0);
     const [allowPlayersToEnter, setAllowPlayersToEnter] = useState(false);
+    const [scoreboard, setScoreboard] = useState([]);
 
     const establishWebSocketConnection = () => {
         return new Promise((resolve) => {
@@ -29,6 +30,9 @@ const AuthState = (props) => {
                 console.log("WebSocket message received", data);
                 if (data.reason === "/onAllowPlayersToEnter") {
                     setAllowPlayersToEnter(true);
+                }
+                if (data.reason === "/onGameStart" || data.reason === "/onGameEnd") {
+                    setScoreboard(data.scoreboard);
                 }
                 setIndex(data.index);
             });
@@ -49,13 +53,17 @@ const AuthState = (props) => {
                 body: JSON.stringify({ ...credentials, index }),
             });
 
-            console.log(await response.json());
+            const data = await response.json();
+            console.log(data);
 
             if (response.status === 200) {
                 setUser({
                     name: credentials.name,
                     email: credentials.email,
                 });
+                if (data.allowPlayersToEnter === true) {
+                    setAllowPlayersToEnter(true);
+                }
                 toast.success("Registered successfully");
                 router.push("/");
             } else {
@@ -83,6 +91,7 @@ const AuthState = (props) => {
                     register,
                     socket, // Pass the WebSocket connection through the context
                     allowPlayersToEnter,
+                    scoreboard,
                 }}
             >
                 {props.children}
