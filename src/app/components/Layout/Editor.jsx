@@ -1,15 +1,16 @@
 'use client'
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-javascript';
 import 'ace-builds/src-noconflict/theme-monokai';
 import AuthContext from '@/app/context/authentication/authContext';
 import { toast, Toaster } from 'react-hot-toast';
-import ConnectFour from '../ConnectFourBoard';
+import ConnectFourTest from '../ConnectFourBoardTest';
 
 const Editor = () => {
   const [code, setCode] = useState(''); // State to store the code
-  const { allowPlayersToEnter, index, testBoard } = useContext(AuthContext)
+  const { allowPlayersToEnter, index, testBoard, setTestBoard, testMatchResult, setTestMatchResult } = useContext(AuthContext)
+  const [showModal, setshowModal] = useState(false);
 
   // Function to handle code changes
   const handleCodeChange = (newCode) => {
@@ -17,14 +18,21 @@ const Editor = () => {
   };
 
   const testCode = async () => {
+    if (code.length === 0) return toast.error("Please write some code")
+
+    const element = document.getElementById("testMatchResults");
+
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+
     try {
-      // console.log(JSON.stringify({ code, index }))
       const response = await fetch('http://localhost:3001/onPlayerFunctionTest', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: `{"code":"(function makeMove(state){return 4})","index":0}`
+        body: JSON.stringify({ code, index })
       })
       console.log("response", await response.text())
     } catch (error) {
@@ -32,6 +40,11 @@ const Editor = () => {
       toast.error(error.message)
     }
   }
+
+  useEffect(() => {
+    if (testMatchResult)
+      setshowModal(true)
+  }, [testMatchResult])
 
   return (
     <>
@@ -59,7 +72,26 @@ const Editor = () => {
           <h1 className='text-4xl text-center font-bold pb-4'>Please wait for the game to start</h1>
         }
       </div>
-      {testBoard && <ConnectFour testBoardState={testBoard} type='test' />}
+      {testBoard.length > 0 && <ConnectFourTest testBoardState={testBoard} setTestBoardState={setTestBoard} />}
+      {
+        testMatchResult &&
+        <>
+          <input checked={showModal} type="checkbox" id="my_modal_6" className="modal-toggle" />
+          <div className="modal">
+            <div className="modal-box">
+              <h3 className="font-bold text-2xl">Test Match Over</h3>
+              <div className="py-4 space-y-1">
+                <p><strong>Winner:</strong> {testMatchResult.winner.name}</p>
+                <p><strong>Loser:</strong> {testMatchResult.loser.name}</p>
+                <p>Your code generated <strong>{testMatchResult.invalid ? 'an invalid move' : 'no invalid move'}</strong></p>
+              </div>
+              <div className="modal-action">
+                <label onClick={() => { setshowModal(false); setTestMatchResult(null) }} htmlFor="my_modal_6" className="btn btn-neutral">Close!</label>
+              </div>
+            </div>
+          </div>
+        </>
+      }
     </>
 
   );

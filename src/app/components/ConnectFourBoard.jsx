@@ -10,7 +10,7 @@ const jost = Jost({
     subsets: ['latin'],
 });
 
-export default function ConnectFour({ testBoardState, type }) {
+export default function ConnectFour() {
     const [board, setboard] = useState([
         ["", "", "", "", "", "", ""],
         ["", "", "", "", "", "", ""],
@@ -23,7 +23,7 @@ export default function ConnectFour({ testBoardState, type }) {
     const [isWinner, setisWinner] = useState(false);
     const [showModal, setshowModal] = useState(false);
 
-    const fullBoard = (type === 'test' ? testBoardState : board).map((row, rowIdx) => {
+    const fullBoard = board.map((row, rowIdx) => {
         return row.map((val, colIdx) => {
             return (
                 <ConnectFourSquare
@@ -32,7 +32,7 @@ export default function ConnectFour({ testBoardState, type }) {
                     colIdx={colIdx}
                     rowIdx={rowIdx}
                     currentPlayer={currentPlayer}
-                    board={(type === 'test' ? testBoardState : board)} // Pass testBoardState or board based on type
+                    board={board} // Pass testBoardState or board based on type
                     setCurrentPlayer={setCurrentPlayer}
                     setisWinner={setisWinner}
                     isWinner={isWinner}
@@ -51,7 +51,7 @@ export default function ConnectFour({ testBoardState, type }) {
             ["", "", "", "", "", "", ""],
             ["", "", "", "", "", "", ""],
         ]);
-        setCurrentPlayer("1");
+        setCurrentPlayer("X");
         setisWinner(false);
         setshowModal(false);
     }
@@ -77,7 +77,7 @@ export default function ConnectFour({ testBoardState, type }) {
             {isWinner ? (
                 <div className="current-player-container mt-7">
                     <h1 className={`text-4xl ${jost.className} font-bold`}>The Winner is</h1>
-                    {currentPlayer === "1" ? (
+                    {currentPlayer === "X" ? (
                         <div className="cf-token-O"></div>
                     ) : (
                         <div className="cf-token-X"></div>
@@ -86,11 +86,11 @@ export default function ConnectFour({ testBoardState, type }) {
             ) : (
                 <></>
             )}
-            <RestartComponent
+            {showModal && <RestartComponent
                 showModal={showModal}
                 setshowModal={setshowModal}
                 currentPlayer={currentPlayer}
-                restart={restart} />
+                restart={restart} />}
         </div>
     );
 }
