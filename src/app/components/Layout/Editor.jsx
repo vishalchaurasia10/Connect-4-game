@@ -41,6 +41,26 @@ const Editor = () => {
     }
   }
 
+  const submitCode = async () => {
+    if (code.length === 0) return toast.error("Please write some code")
+
+    try {
+      const response = await fetch('http://localhost:3001/onPlayerFunctionSubmit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ code, index })
+      })
+      const data = await response.text()
+      console.log("response", data)
+      toast.success(data)
+    } catch (error) {
+      console.log(error)
+      toast.error(error.message)
+    }
+  }
+
   useEffect(() => {
     if (testMatchResult)
       setshowModal(true)
@@ -64,7 +84,7 @@ const Editor = () => {
               fontSize={16}     // Set the font size
             />
             <div className="upload w-full flex space-x-2 pt-4">
-              <button className='bg-white text-black my-2 px-4 py-2 rounded-md'>Submit</button>
+              <button onClick={submitCode} className='bg-white text-black my-2 px-4 py-2 rounded-md'>Submit</button>
               <button onClick={testCode} className='bg-white text-black my-2 px-4 py-2 rounded-md'>Test</button>
             </div>
           </>

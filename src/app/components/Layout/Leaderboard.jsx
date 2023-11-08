@@ -17,7 +17,7 @@ const Leaderboard = () => {
 
     return (
         <>
-            <div className="overflow-x-auto pt-28 pl-10 min-h-screen">
+            <div className="overflow-x-auto pt-28 lg:px-20 min-h-screen">
                 <h1 className='text-4xl font-bold pb-4'>Leaderboard</h1>
                 <table className="table">
                     <thead className='text-white text-xl'>

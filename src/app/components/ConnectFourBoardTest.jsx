@@ -1,6 +1,6 @@
 'use client'
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Jost } from "next/font/google";
 import ConnectFourSquareTest from "./ConnectFourSquareTest";
 
@@ -23,8 +23,16 @@ export default function ConnectFourTest({ testBoardState }) {
         });
     });
 
+    const testMatchResultsRef = useRef(null);
+
+    useEffect(() => {
+        if (testMatchResultsRef.current) {
+            testMatchResultsRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, []);
+
     return (
-        <div id="testMatchResults" className="main-Page-Container py-24 min-h-screen">
+        <div id="testMatchResults" ref={testMatchResultsRef} className="main-Page-Container py-24 min-h-screen">
             <div className="current-player-container">
                 <h1 className={`text-4xl ${jost.className} font-bold mt-4`}>You are </h1>
                 <div className="cf-token-O"></div>
