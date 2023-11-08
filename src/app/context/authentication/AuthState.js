@@ -97,6 +97,7 @@ const AuthState = (props) => {
                     socket, // Pass the WebSocket connection through the context
                     allowPlayersToEnter,
                     scoreboard,
+                    index,
                 }}
             >
                 {props.children}
