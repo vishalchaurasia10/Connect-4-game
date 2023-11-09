@@ -1,11 +1,12 @@
 'use client'
 import React, { useContext, useEffect, useState } from 'react'
 import AuthContext from '@/app/context/authentication/authContext'
+import ConnectFourTest from '../ConnectFourBoardTest'
 
 const Leaderboard = () => {
 
     const [scoreboard, setScoreboard] = useState([])
-    const { loading } = useContext(AuthContext)
+    const { loading, actualBoard, actualMatchResult } = useContext(AuthContext)
 
     useEffect(() => {
         const getLeaderboard = async () => {
@@ -30,10 +31,13 @@ const Leaderboard = () => {
         <>
             <div className="overflow-x-auto lg:px-20 min-h-screen">
                 {loading ?
-                    <div className="loadingAnimation h-screen space-y-4 flex flex-col items-center justify-center">
-                        <span className="loading loading-spinner loading-lg"></span>
-                        <p className='text-4xl text-center'>Wait for the game to end to see the Leaderboard</p>
-                    </div>
+                    <>
+                        <div className="loadingAnimation pt-40 space-y-4 flex flex-col items-center justify-center">
+                            <span className="loading loading-spinner loading-lg"></span>
+                            <p className='text-4xl text-center'>Wait for the game to end to see the Leaderboard</p>
+                        </div>
+                        {actualBoard.length > 0 && <ConnectFourTest testBoardState={actualBoard} player1={actualMatchResult?.winner?.name} player2={actualMatchResult?.loser?.name} type='actual' />}
+                    </>
                     :
                     <>
                         <h1 className='text-4xl font-bold pb-4 pt-28'>Leaderboard</h1>

@@ -15,7 +15,9 @@ const AuthState = (props) => {
     const [allowPlayersToEnter, setAllowPlayersToEnter] = useState(false);
     const [scoreboard, setScoreboard] = useState([]);
     const [testBoard, setTestBoard] = useState([]);
+    const [actualBoard, setActualBoard] = useState([]);
     const [testMatchResult, setTestMatchResult] = useState(null);
+    const [actualMatchResult, setActualMatchResult] = useState(null);
     const [loading, setLoading] = useState(true);
     const indexRef = useRef(index);
 
@@ -80,6 +82,12 @@ const AuthState = (props) => {
                 if (resData.reason === "/onMakeMove") {
                     setLoading(true)
                 }
+                if (resData.reason === "/onMakeMove") {
+                    setActualBoard(resData.state)
+                }
+                if (resData.reason === "/onMatchEnd") {
+                    setActualMatchResult(resData)
+                }
             });
         });
     };
@@ -116,7 +124,10 @@ const AuthState = (props) => {
                     setTestBoard,
                     testMatchResult,
                     setTestMatchResult,
-                    loading
+                    loading,
+                    actualBoard,
+                    setActualBoard,
+                    actualMatchResult,
                 }}
             >
                 {props.children}
