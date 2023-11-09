@@ -8,7 +8,14 @@ import { toast, Toaster } from 'react-hot-toast';
 import ConnectFourTest from '../ConnectFourBoardTest';
 
 const Editor = () => {
-  const [code, setCode] = useState(''); // State to store the code
+  const [code, setCode] = useState(`
+function makeMove(state) {
+  // Write your code here
+  // If you require your own functions define them within this function
+
+  return column;
+}
+  `); // State to store the code
   const { allowPlayersToEnter, index, testBoard, setTestBoard, testMatchResult, setTestMatchResult } = useContext(AuthContext)
   const [showModal, setshowModal] = useState(false);
 

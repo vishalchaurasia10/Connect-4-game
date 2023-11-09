@@ -95,7 +95,7 @@ const AuthState = (props) => {
     };
 
     useEffect(() => {
-        if (!user) {
+        if (!user && pathname !== "/admin") {
             router.push("/auth");
         }
     }, [pathname]);
