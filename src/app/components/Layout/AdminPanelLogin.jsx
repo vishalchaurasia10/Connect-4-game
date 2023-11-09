@@ -9,18 +9,50 @@ const AdminPanelLogin = ({ setAdmin }) => {
         setSecretKey(e.target.value)
     }
 
-    const checkValidity = (e) => {
+    const establishWebSocketConnection = () => {
+        return new Promise(async () => {
+            const ws = new WebSocket("ws://localhost:3001"); // Replace with your WebSocket server address
+
+            ws.addEventListener("open", () => {
+                console.log("WebSocket connection established");
+            });
+
+            ws.addEventListener("message", async (event) => {
+                const resData = JSON.parse(event.data);
+                console.log("WebSocket message received", resData);
+                if (resData.reason === "/onClientConnected") {
+                    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/registerAdmin`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ index: -1 }),
+                    });
+
+                    const data = await response.json();
+                    console.log(data);
+
+                    if (response.status === 200) {
+                        setAdmin(true)
+                        toast.success("Admin connected successfully");
+                    } else {
+                        toast.error("Registration failed");
+                    }
+                }
+            });
+        });
+    };
+
+    const checkValidity = async (e) => {
         e.preventDefault()
-        console.log(secretKey)
         if (secretKey === '') {
             toast.error('Please fill all the fields')
         } else if (secretKey.length < 3) {
-            toast.error('Secrete Key must be atleast 8 characters long')
+            toast.error('Secret Key must be atleast 8 characters long')
         }
         else {
             if (secretKey === process.env.NEXT_PUBLIC_ADMIN_KEY) {
-                toast.success('Admin Login Successful')
-                setAdmin(true)
+                await establishWebSocketConnection()
             } else {
                 toast.error('Wrong Secret Key')
             }

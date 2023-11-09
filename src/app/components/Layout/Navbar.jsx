@@ -1,12 +1,17 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { FaUserAlt } from 'react-icons/fa'
+import AuthContext from '@/app/context/authentication/authContext'
+import { usePathname } from 'next/navigation'
 
 const Navbar = () => {
 
     const [isOpen, setIsOpen] = useState(false)
     const [isMobile, setIsMobile] = useState(false);
+    const pathname = usePathname()
+    const { user } = useContext(AuthContext)
 
     const handleHamburgerClick = () => {
         setIsOpen(!isOpen);
@@ -64,6 +69,23 @@ const Navbar = () => {
                 </div>
 
                 <div className="right md:relative flex justify-end items-center w-1/2 md:w-1/4 pr-4 lg:pr-8">
+                    <div className="userprofile">
+                        {
+                            user ?
+                                <div className="dropdown dropdown-end">
+                                    <label tabIndex={0} className="btn m-1">
+                                        <FaUserAlt className='text-3xl p-1 border-2 border-white rounded-full cursor-pointer' />
+                                    </label>
+                                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                                        <li><a>{user.email}</a></li>
+                                        <li><a>{user.name}</a></li>
+                                    </ul>
+                                </div>
+
+                                :
+                                ''
+                        }
+                    </div>
                     <div className="hamburger lg:hidden flex flex-col space-y-1" onClick={handleHamburgerClick}>
                         <motion.div
                             initial={{ rotate: 0 }}

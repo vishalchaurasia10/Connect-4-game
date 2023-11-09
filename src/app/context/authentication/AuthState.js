@@ -43,6 +43,7 @@ const AuthState = (props) => {
                     const newIndex = resData.index;
                     indexRef.current = newIndex; // Update the ref with the latest index
                     setIndex(newIndex); // Update the state with the latest index
+                    console.log("New index received", newIndex);
                     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/register`, {
                         method: "POST",
                         headers: {
@@ -62,6 +63,7 @@ const AuthState = (props) => {
                         if (data.allowPlayersToEnter === true) {
                             setAllowPlayersToEnter(true);
                         }
+                        setIndex(data.index)
                         toast.success("Registered successfully");
                         router.push("/");
                     } else {
