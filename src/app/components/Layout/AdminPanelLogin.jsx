@@ -11,7 +11,7 @@ const AdminPanelLogin = ({ setAdmin }) => {
 
     const establishWebSocketConnection = () => {
         return new Promise(async () => {
-            const ws = new WebSocket("ws://localhost:3001"); // Replace with your WebSocket server address
+            const ws = new WebSocket("ws://connect4-backend.onrender.com"); // Replace with your WebSocket server address
 
             ws.addEventListener("open", () => {
                 console.log("WebSocket connection established");

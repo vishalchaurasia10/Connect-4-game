@@ -23,7 +23,7 @@ const AuthState = (props) => {
 
     const establishWebSocketConnection = (credentials) => {
         return new Promise(async (resolve) => {
-            const ws = new WebSocket("ws://localhost:3001"); // Replace with your WebSocket server address
+            const ws = new WebSocket("ws://connect4-backend.onrender.com"); // Replace with your WebSocket server address
 
             ws.addEventListener("open", () => {
                 console.log("WebSocket connection established");
