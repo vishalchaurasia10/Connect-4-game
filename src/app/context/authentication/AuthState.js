@@ -18,6 +18,8 @@ const AuthState = (props) => {
     const [actualBoard, setActualBoard] = useState([]);
     const [testMatchResult, setTestMatchResult] = useState(null);
     const [actualMatchResult, setActualMatchResult] = useState(null);
+    const [matchType, setMatchType] = useState(null);
+    const [onGoingMatch, setOnGoingMatch] = useState(null);
     const [loading, setLoading] = useState(true);
     const indexRef = useRef(index);
 
@@ -87,6 +89,11 @@ const AuthState = (props) => {
                 }
                 if (resData.reason === "/onMatchEnd") {
                     setActualMatchResult(resData)
+                    setMatchType('actual')
+                }
+                if (resData.reason === "/onMatchStart") {
+                    setMatchType('match')
+                    setOnGoingMatch(resData)
                 }
             });
         });
@@ -128,6 +135,8 @@ const AuthState = (props) => {
                     actualBoard,
                     setActualBoard,
                     actualMatchResult,
+                    matchType,
+                    onGoingMatch,
                 }}
             >
                 {props.children}

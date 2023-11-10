@@ -6,7 +6,7 @@ import ConnectFourTest from '../ConnectFourBoardTest'
 const Leaderboard = () => {
 
     const [scoreboard, setScoreboard] = useState([])
-    const { loading, actualBoard, actualMatchResult } = useContext(AuthContext)
+    const { loading, actualBoard, actualMatchResult, matchType, onGoingMatch } = useContext(AuthContext)
 
     useEffect(() => {
         const getLeaderboard = async () => {
@@ -36,7 +36,13 @@ const Leaderboard = () => {
                             <span className="loading loading-spinner loading-lg"></span>
                             <p className='text-4xl text-center'>Wait for the game to end to see the Leaderboard</p>
                         </div>
-                        {actualBoard.length > 0 && <ConnectFourTest testBoardState={actualBoard} player1={actualMatchResult?.winner?.name} player2={actualMatchResult?.loser?.name} type='actual' />}
+                        {actualBoard.length > 0 &&
+                            <ConnectFourTest
+                                testBoardState={actualBoard}
+                                player1={matchType === 'match' ? onGoingMatch?.player1Object?.name : actualMatchResult?.winner?.name}
+                                player2={matchType === 'match' ? onGoingMatch?.player2Object?.name : actualMatchResult?.loser?.name}
+                                type={matchType}
+                            />}
                     </>
                     :
                     <>
