@@ -39,7 +39,7 @@ const SignUp = () => {
     return (
         <>
             <Toaster />
-            <div className="wrapper h-screen flex items-center justify-center w-full pt-28 pb-20 md:pt-40 lg:pt-32 px-3">
+            <div className="wrapper min-h-screen flex items-center justify-center w-full pt-28 pb-20 md:pt-40 px-3">
                 <motion.div
                     initial={{ opacity: 0, y: 100 }}
                     animate={{ opacity: 1, y: 0 }}
