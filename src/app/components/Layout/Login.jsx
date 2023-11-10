@@ -6,7 +6,7 @@ import AuthContext from '@/app/context/authentication/authContext';
 
 const SignUp = () => {
 
-    const [credentials, setCredentials] = useState({ email: '', name: '' })
+    const [credentials, setCredentials] = useState({ email: '', name: '', offlineid: '' })
     const { register } = useContext(AuthContext)
 
     const onChangeHandler = (e) => {
@@ -32,7 +32,7 @@ const SignUp = () => {
         } catch (error) {
             toast.error(error.message);
         }
-        setCredentials({ name: '', email: '' })
+        setCredentials({ name: '', email: '', offlineid: '' })
     }
 
 
@@ -52,6 +52,7 @@ const SignUp = () => {
                         className="uploadPhotos flex flex-col items-center justify-center space-y-4 mt-4">
                         <input onChange={onChangeHandler} className='w-full rounded-lg px-4 py-3 bg-[rgba(255,255,255,0.2)] outline-none' placeholder='Enter your email' value={credentials.email} type="email" name="email" id="email" />
                         <input onChange={onChangeHandler} className='w-full rounded-lg px-4 py-3 bg-[rgba(255,255,255,0.2)] outline-none' placeholder='Enter the name' value={credentials.name} type="text" name="name" id="name" />
+                        <input onChange={onChangeHandler} className='w-full rounded-lg px-4 py-3 bg-[rgba(255,255,255,0.2)] outline-none' placeholder='Enter the offlineid (only if you are playing from campus)' value={credentials.offlineid} type="text" name="offlineid" id="offlineid" />
                         <div className="upload w-full">
                             <button onClick={checkValidity} className='bg-white text-black my-2 px-4 py-2 rounded-md'>Regsiter</button>
                         </div>

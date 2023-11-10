@@ -35,7 +35,7 @@ const Editor = () => {
     //column in which you make your move
     return column;
   }`); // State to store the code
-  const { allowPlayersToEnter, index, testBoard, setTestBoard, testMatchResult, setTestMatchResult } = useContext(AuthContext)
+  const { allowPlayersToEnter, index, testBoard, setTestBoard, actualBoard, testMatchResult, setTestMatchResult } = useContext(AuthContext)
   const [showModal, setshowModal] = useState(false);
 
   // Function to handle code changes
@@ -110,7 +110,7 @@ const Editor = () => {
               fontSize={16}     // Set the font size
             />
             <div className="upload w-full flex space-x-2 pt-4">
-              <button onClick={submitCode} className='bg-white text-black my-2 px-4 py-2 rounded-md'>Submit</button>
+              <button onClick={submitCode} disabled={actualBoard.length > 0} className={`${actualBoard.length > 0 ? 'cursor-not-allowed' : ''} bg-white text-black my-2 px-4 py-2 rounded-md`}>Submit</button>
               <button onClick={testCode} className='bg-white text-black my-2 px-4 py-2 rounded-md'>Test</button>
             </div>
           </>
