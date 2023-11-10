@@ -39,7 +39,7 @@ const SignUp = () => {
     return (
         <>
             <Toaster />
-            <div className="wrapper min-h-screen flex items-center justify-center w-full pt-28 pb-20 md:pt-40 px-3">
+            <div className="wrapper min-h-screen flex items-center justify-center w-full pt-28 pb-20 md:pt-40 lg:pt-32 px-3">
                 <motion.div
                     initial={{ opacity: 0, y: 100 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -52,9 +52,9 @@ const SignUp = () => {
                         className="uploadPhotos flex flex-col items-center justify-center space-y-4 mt-4">
                         <input onChange={onChangeHandler} className='w-full rounded-lg px-4 py-3 bg-[rgba(255,255,255,0.2)] outline-none' placeholder='Enter your email' value={credentials.email} type="email" name="email" id="email" />
                         <input onChange={onChangeHandler} className='w-full rounded-lg px-4 py-3 bg-[rgba(255,255,255,0.2)] outline-none' placeholder='Enter the name' value={credentials.name} type="text" name="name" id="name" />
-                        <input onChange={onChangeHandler} className='w-full rounded-lg px-4 py-3 bg-[rgba(255,255,255,0.2)] outline-none' placeholder='Enter the offlineid (only if you are playing from campus)' value={credentials.offlineid} type="text" name="offlineid" id="offlineid" />
+                        <input onChange={onChangeHandler} className='w-full rounded-lg px-4 py-3 bg-[rgba(255,255,255,0.2)] outline-none' placeholder='Enter the offlineid (Leave it blank if you are playing outside the campus)' value={credentials.offlineid} type="text" name="offlineid" id="offlineid" />
                         <div className="upload w-full">
-                            <button onClick={checkValidity} className='bg-white text-black my-2 px-4 py-2 rounded-md'>Regsiter</button>
+                            <button onClick={checkValidity} className='bg-white text-black my-2 px-4 py-2 rounded-md'>Register</button>
                         </div>
                     </div>
                 </motion.div>
