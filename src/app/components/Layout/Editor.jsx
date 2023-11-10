@@ -8,12 +8,33 @@ import { toast, Toaster } from 'react-hot-toast';
 import ConnectFourTest from '../ConnectFourBoardTest';
 
 const Editor = () => {
-  const [code, setCode] = useState(`function makeMove(state) {
-  // Write your code here
-  // If you require your own functions define them within this function
-
-  return column;
-}`); // State to store the code
+  const [code, setCode] = useState(`function makeMove(state,player,opponent) {
+    
+    //If you are unfamiliar with javascript, you can use : 
+    //https://www.codeconvert.ai/free-converter
+    
+    /*
+     - Write your code here
+     - If you require your own functions define them within this function
+       (nested function)
+     - State is 2d array (6x7)
+     - Player refers to you
+     - opponent refers to the other player
+     - If you have occupied a cell, say ith row and jth column, (0 indexed)
+       then state[i][j] will be equal to player
+     - If the opponent has occupied a cell, say ith row and jth column, 
+       (0 indexed) then state[i][j] will be equal to opponent
+    */
+    const playerOccupiedCell = player //Your occupied cell will have this.
+    const opponentOccupiedCell = opponent // Opponent occupied cell will have this.
+    const blankCell = 0 //blank cell holds the value 0
+    
+    let column = 0; //Say
+    
+    //You are supposed to return an integer value which will be the 
+    //column in which you make your move
+    return column;
+  }`); // State to store the code
   const { allowPlayersToEnter, index, testBoard, setTestBoard, testMatchResult, setTestMatchResult } = useContext(AuthContext)
   const [showModal, setshowModal] = useState(false);
 
